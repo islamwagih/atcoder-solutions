@@ -22,24 +22,26 @@ const int mod = 1e9+7;
 const int OO = 0x3f3f3f3f;
 const ll OOLL = 0x3f3f3f3f3f3f3f3f;
 
-int n, w;
-ll dp[N][109];
-int weight[109];
-int value[109];
-
-ll solve(int currW, int i){
-    if(i == n) return 0;
-    ll& ans = dp[currW][i];
+int n, k;
+int dp[N];
+int arr[N];
+int solve(int i){
+    if(i == n-1) return 0;
+    if(i >= n) return OO;
+    int& ans = dp[i];
     if(~ans) return ans;
-    ans = max((currW >= weight[i] ? value[i]+solve(currW-weight[i], i+1):-OOLL), solve(currW, i+1));
+    ans = OO;
+    for(int step = i+1;step<n && (step-i)<=k;step++){
+        ans = min(ans, abs(arr[step]-arr[i])+solve(step));
+    }
     return ans;
 }
 
 int main(){
     FIO();
     memset(dp, -1, sizeof dp);
-    cin>>n>>w;
-    for(int i=0;i<n;i++) cin>>weight[i]>>value[i];
-    cout<<solve(w, 0)<<endl;
+    cin>>n>>k;
+    for(int i=0;i<n;i++) cin>>arr[i];
+    cout<<solve(0)<<endl;
     return 0;
 }
